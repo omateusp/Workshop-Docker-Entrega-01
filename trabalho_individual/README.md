@@ -1,3 +1,13 @@
+# Rodando a aplicação
+
+### `make run`
+
+Roda todos os servições utilizando o docker-compose.
+
+### `make stop`
+
+Para e deleta todos os containers juntamente das imagens dos mesmos.
+
 # Utilizando a aplicação
 
 Após orquestrar os serviços e tudo transcorrer sem erros, para fazer um teste poderá:

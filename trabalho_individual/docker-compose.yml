@@ -1,0 +1,59 @@
+version: '3.3'
+
+services:
+    api-gateway:
+        build: ./api-gateway
+        ports:
+            - "7000:7000"
+
+    chat-app:
+        build: ./chat-app
+        ports:
+            - "7001:7001"
+
+    chat-service:
+        build: ./chat-service
+        ports:
+            - "7100:7100"
+        depends_on:
+            - chat-service-db
+
+    chat-service-db:
+        image: mysql:5.7.20
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: db
+        ports:
+            - "7200:3306"
+        volumes: 
+            - ./chat-service-db:/var/lib/mysql
+
+    users-service:
+        build: ./users-service
+        ports:
+            - "7101:7101"
+        depends_on:
+            - users-service-db
+
+    users-service-db:
+        image: mysql:5.7.20
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: db
+        ports:
+            - "7201:3306"
+        volumes: 
+            - ./users-service-db:/var/lib/mysql
+
+    phpmyadmin:
+        image: phpmyadmin
+        links:
+            - users-service-db
+            - chat-service-db
+        depends_on:
+            - users-service-db
+            - chat-service-db
+        ports:
+            - "7300:80"
+        volumes:
+            - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
